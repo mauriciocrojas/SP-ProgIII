@@ -37,7 +37,8 @@ CREATE TABLE `tienda` (
   `stock` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-
+ALTER TABLE tienda 
+ADD eliminado BOOL NOT NULL DEFAULT 0;
 
 --
 -- Volcado de datos para la tabla `tienda`

@@ -16,15 +16,31 @@ class Tienda
     {
 
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO tienda (idmesa, nombrecliente) VALUES (:idmesa, :nombrecliente)");
-        $consulta->bindValue(':idmesa', $this->idmesa, PDO::PARAM_INT);
-        $consulta->bindValue(':nombrecliente', $this->nombrecliente, PDO::PARAM_STR);
+        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO tienda (descripcion, tipo, color, talla, precio, stock) VALUES (:descripcion, :tipo, :color, :talla, :precio, :stock)");
+        $consulta->bindValue(':descripcion', $this->descripcion, PDO::PARAM_STR);
+        $consulta->bindValue(':tipo', $this->tipo, PDO::PARAM_STR);
+        $consulta->bindValue(':color', $this->color, PDO::PARAM_STR);
+        $consulta->bindValue(':talla', $this->talla, PDO::PARAM_STR);
+        $consulta->bindValue(':precio', $this->precio, PDO::PARAM_INT);
+        $consulta->bindValue(':stock', $this->stock, PDO::PARAM_INT);
+
         $consulta->execute();
 
-        $consultaPedidoProducto = $objAccesoDatos->prepararConsulta("INSERT INTO pedidoproducto (idpedido, idproducto, cantidad) VALUES (:idpedido, :idproducto, :cantidad)");
-
-        $idpedido = $objAccesoDatos->obtenerUltimoId();
+        return $objAccesoDatos->obtenerUltimoId();
     }
+
+    public static function ActualizarPrendaExistente($stock, $precio, $idprenda)
+    {
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta("UPDATE tienda SET stock = stock + :stock, precio = :precio WHERE idprenda = :idprenda");
+
+        $consulta->bindValue(':precio', $precio, PDO::PARAM_INT);
+        $consulta->bindValue(':stock', $stock, PDO::PARAM_INT);
+        $consulta->bindValue(':idprenda', $idprenda, PDO::PARAM_INT);
+
+        $consulta->execute();
+    }
+
 
     public static function GuardarImagenMesa($ubicacionImagen, $idpedido)
     {
@@ -39,13 +55,11 @@ class Tienda
     public static function obtenerTodos()
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT pe.idpedido IdPedido, pe.idmesa Mesa, pe.nombrecliente Cliente, pe.estado EstadoPedido, 
-        pe.tiempoestimado TiempoDePreparacion, pr.descripcion Producto , pp.cantidad Cantidad, pe.ubicacionimagen UbicacionImagen FROM pedido pe 
-        inner join pedidoproducto pp on pe.idpedido = pp.idpedido
-        inner join producto pr on pp.idproducto = pr.idproducto");
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT idPrenda, descripcion, tipo, color, talla, precio, stock FROM tienda");
+
         $consulta->execute();
 
-        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
+        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Tienda');
     }
 
     public static function obtenerPedido($id)

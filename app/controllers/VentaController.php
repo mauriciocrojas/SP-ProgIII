@@ -24,6 +24,7 @@ class VentaController extends Venta
     $payload = json_encode(array("mensaje" => "Producto creado con exito"));
 
     $response->getBody()->write($payload);
+    
     return $response
       ->withHeader('Content-Type', 'application/json');
   }

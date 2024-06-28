@@ -16,9 +16,9 @@ require __DIR__ . '/../vendor/autoload.php';
 require_once './db/AccesoDatos.php';
 // require_once './middlewares/Logger.php';
 
-require_once './controllers/ProductoController.php';
-require_once './controllers/PedidoController.php';
-require_once './middlewares/AuthPedidoMW.php';
+require_once './controllers/TiendaController.php';
+require_once './controllers/VentaController.php';
+require_once './middlewares/AuthPrendaMW.php';
 
 // Load ENV
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
@@ -40,24 +40,24 @@ $app->addBodyParsingMiddleware();
 
 // Routes Tienda
 $app->group('/tienda', function (RouteCollectorProxy $group) {
-  $group->get('[/]', \PedidoController::class . ':TraerTodos');
-  $group->get('/{idpedido}', \PedidoController::class . ':TraerUno');
-  $group->post('[/]', \PedidoController::class . ':CargarUno')->add(\AuthPedidoMW::class . ':ValidarParamsPedido');
-  $group->post('/alta', \PedidoController::class . ':CargarImagenMesa');
-  $group->put('/modificarestado/{id}', \PedidoController::class . ':ModificarUno');
-  $group->delete('/eliminarpedido/{id}', \PedidoController::class . ':BorrarUno');
+  $group->get('[/]', \TiendaController::class . ':TraerTodos');
+  // $group->get('/{idpedido}', \TiendaController::class . ':TraerUno');
+  $group->post('[/alta]', \TiendaController::class . ':CargarUno')->add(\AuthPrendaMW::class . ':ValidarParamsPrenda');
+  // $group->post('/alta', \TiendaController::class . ':CargarImagenMesa');
+  // $group->put('/modificarestado/{id}', \TiendaController::class . ':ModificarUno');
+  //$group->delete('/eliminarpedido/{id}', \TiendaController::class . ':BorrarUno');
 });
 
 
 
 // Routes Venta
-$app->group('/productos', function (RouteCollectorProxy $group) {
-  $group->get('[/]', \ProductoController::class . ':TraerTodos');
-  $group->get('/{descripcionProducto}', \ProductoController::class . ':TraerUno');
-  $group->post('[/]', \ProductoController::class . ':CargarUno');
-  $group->put('/modificarestado/{id}', \ProductoController::class . ':ModificarUno');
-  $group->delete('/eliminarproducto/{id}', \ProductoController::class . ':BorrarUno');
-});
+// $app->group('/productos', function (RouteCollectorProxy $group) {
+//   $group->get('[/]', \ProductoController::class . ':TraerTodos');
+//   $group->get('/{descripcionProducto}', \ProductoController::class . ':TraerUno');
+//   $group->post('[/]', \ProductoController::class . ':CargarUno');
+//   $group->put('/modificarestado/{id}', \ProductoController::class . ':ModificarUno');
+//   $group->delete('/eliminarproducto/{id}', \ProductoController::class . ':BorrarUno');
+// });
 
 
 

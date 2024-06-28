@@ -8,24 +8,45 @@ class TiendaController extends Tienda
   {
     $parametros = $request->getParsedBody();
 
+    $descripcion = $parametros['descripcion'];
+    $tipo = $parametros['tipo'];
+    $color = $parametros['color'];
+    $talla = $parametros['talla'];
+    $precio = $parametros['precio'];
+    $stock = $parametros['stock'];
 
-    $idmesa = $parametros['idmesa'];
-    $nombrecliente = $parametros['nombrecliente'];
-    $productos = json_decode($parametros['productos'], true);
+    $existePrenda = false;
 
-    // Creamos el pedido
-    $pedido = new Pedido();
-    $pedido->idmesa = $idmesa;
-    $pedido->nombrecliente = $nombrecliente;
-    $pedido->productos = $productos;
-    $pedido->crearPedido();
+    $listaPrendas = Tienda::obtenerTodos();
 
-    $payload = json_encode(array("mensaje" => "Pedido creado con exito"));
+    foreach ($listaPrendas as $prenda) {
+      if ($parametros['descripcion'] == $prenda->descripcion && $parametros['tipo'] == $prenda->tipo) {
+        Tienda::ActualizarPrendaExistente($parametros['stock'], $parametros['precio'], $prenda->idPrenda);
+        $payload = json_encode(array("mensaje" => "La prenda ya existía, por lo que se actualizó su valor y stock"));
+        $existePrenda = true;
+        break;
+      }
+    }
+
+    if (!$existePrenda) {
+      // Creamos la prenda
+      $prenda = new Tienda();
+      $prenda->descripcion = $descripcion;
+      $prenda->tipo = $tipo;
+      $prenda->color = $color;
+      $prenda->talla = $talla;
+      $prenda->precio = $precio;
+      $prenda->stock = $stock;
+      $prenda->crearPrenda();
+
+      $payload = json_encode(array("mensaje" => "Prenda creada con exito"));
+    }
 
     $response->getBody()->write($payload);
     return $response
       ->withHeader('Content-Type', 'application/json');
   }
+
 
 
   public function CargarImagenMesa($request, $response, $args)
@@ -44,7 +65,7 @@ class TiendaController extends Tienda
     $imagenMesa->moveTo($rutaImagen);
 
     // Guadamos la ubicación de la imagen en la base de datos
-    Pedido::GuardarImagenMesa($rutaImagen, $idpedido);
+    Tienda::GuardarImagenMesa($rutaImagen, $idpedido);
 
     $payload = json_encode(array("mensaje" => "Imagen cargada con exito, guardada en el servidor, y su ubicacion en la base de datos"));
 
@@ -55,8 +76,8 @@ class TiendaController extends Tienda
 
   public function TraerTodos($request, $response, $args)
   {
-    $lista = Pedido::obtenerTodos();
-    $payload = json_encode(array("listaPedidos" => $lista));
+    $lista = Tienda::obtenerTodos();
+    $payload = json_encode(array("listaPrendas" => $lista));
 
     $response->getBody()->write($payload);
     return $response
@@ -67,7 +88,7 @@ class TiendaController extends Tienda
   {
     // Buscamos pedido por su id
     $idpedido = $args['idpedido'];
-    $pedido = Pedido::obtenerPedido($idpedido);
+    $pedido = Tienda::obtenerPedido($idpedido);
     $payload = json_encode($pedido);
 
     $response->getBody()->write($payload);
@@ -81,7 +102,7 @@ class TiendaController extends Tienda
 
     $id = $args['id'];
     $estado = $parametros['estado'];
-    Pedido::modificarPedido($id, $estado);
+    Tienda::modificarPedido($id, $estado);
 
     $payload = json_encode(array("mensaje" => "Estado del pedido modificado con exito"));
 
@@ -93,7 +114,7 @@ class TiendaController extends Tienda
   public function BorrarUno($request, $response, $args)
   {
     $id = $args['id'];
-    Pedido::borrarPedido($id);
+    Tienda::borrarPedido($id);
 
     $payload = json_encode(array("mensaje" => "Pedido borrado con exito"));
 
