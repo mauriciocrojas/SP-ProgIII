@@ -1,8 +1,7 @@
 <?php
-require_once './models/Pedido.php';
-require_once './interfaces/IApiUsable.php';
+require_once './models/Tienda.php';
 
-class PedidoController extends Pedido implements IApiUsable
+class TiendaController extends Tienda
 {
 
   public function CargarUno($request, $response, $args)

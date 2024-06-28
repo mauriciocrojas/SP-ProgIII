@@ -1,23 +1,22 @@
 <?php
 
-class Pedido
+class Tienda
 {
-    protected $idpedido;
-    protected $idmesa;
-    protected $estado;
-    protected $nombrecliente;
-    protected $ubicacionimagen;
-    protected $tiempoestimado;
-
-    protected $productos = [];
-
+    public $idPrenda;
+    public $descripcion;
+    public $tipo;
+    public $color;
+    public $talla;
+    public $precio;
+    public $stock;
 
 
-    public function crearPedido()
+
+    public function crearPrenda()
     {
 
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO pedido (idmesa, nombrecliente) VALUES (:idmesa, :nombrecliente)");
+        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO tienda (idmesa, nombrecliente) VALUES (:idmesa, :nombrecliente)");
         $consulta->bindValue(':idmesa', $this->idmesa, PDO::PARAM_INT);
         $consulta->bindValue(':nombrecliente', $this->nombrecliente, PDO::PARAM_STR);
         $consulta->execute();
@@ -25,15 +24,6 @@ class Pedido
         $consultaPedidoProducto = $objAccesoDatos->prepararConsulta("INSERT INTO pedidoproducto (idpedido, idproducto, cantidad) VALUES (:idpedido, :idproducto, :cantidad)");
 
         $idpedido = $objAccesoDatos->obtenerUltimoId();
-
-        foreach ($this->productos as $producto) {
-            $consultaPedidoProducto->bindValue(':idpedido', $idpedido, PDO::PARAM_INT);
-            $consultaPedidoProducto->bindValue(':idproducto', $producto['idproducto'], PDO::PARAM_INT);
-            $consultaPedidoProducto->bindValue(':cantidad', $producto['cantidad'], PDO::PARAM_INT);
-            $consultaPedidoProducto->execute();
-        }
-
-        return $objAccesoDatos->obtenerUltimoId();
     }
 
     public static function GuardarImagenMesa($ubicacionImagen, $idpedido)

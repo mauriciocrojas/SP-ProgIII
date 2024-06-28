@@ -18,37 +18,35 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `lacomanda1`
+-- Base de datos: `tienda`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `producto`
+-- Estructura de tabla para la tabla `venta`
 --
 
-CREATE TABLE `producto` (
-  `idproducto` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `descripcion` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+CREATE TABLE `venta` (
+  `idventa` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `email` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `nombrecliente` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
   `tipo` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
-  `tiempopreparacion` int(11) NOT NULL,
+  `fechaventa` DATE NOT NULL,
+  `stock` int(11) NOT NULL,
   `precio` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Volcado de datos para la tabla `producto`
---
 
-INSERT INTO `producto` (`idproducto`, `descripcion`, `tipo`, `tiempopreparacion`, `precio`) VALUES
-('Milanesa a caballo', 'Comida', 20, 5),
-('Hamburguesa de garbanzo', 'Comida', 25, 4),
-('Corona', 'Bebida', 5, 2),
-('Daikiri', 'Bebida', 5, 3),
-('Empanada de carne', 'Comida', 15, 1);
 
 --
--- Índices para tablas volcadas
+-- Volcado de datos para la tabla `venta`
 --
+
+INSERT INTO `venta` (`email`, `nombrecliente`, `tipo`, `fechaventa`, `stock`, `precio`) VALUES
+('adiaz@gmail.com', 'Arnaldo', 'Camiseta', '2024-06-27', 1, 10),
+('bcruz@gmail.com', 'Barbara', 'Pantalon', '2024-06-26', 2, 9);
+
 
 --
 

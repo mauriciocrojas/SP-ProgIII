@@ -1,16 +1,18 @@
 <?php
 
-class Producto
+class Venta
 {
-    public $idproducto;
-    public $descripcion;
+    public $idVenta;
+    public $email;
+    public $nombre;
     public $tipo;
-    public $tiempopreparacion;
-    public $precio;
-    public $estado;
+    public $numeroVenta;
+    public $stock;
+    public $fecha;
+    public $talla;
 
 
-    public function crearProducto()
+    public function crearVenta()
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
         $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO producto (descripcion, tipo, tiempopreparacion, precio) VALUES (:descripcion, :tipo, :tiempopreparacion, :precio)");

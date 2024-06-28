@@ -18,33 +18,35 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `lacomanda1`
+-- Base de datos: `tienda`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `pedidoproducto`
+-- Estructura de tabla para la tabla `tienda`
 --
 
-CREATE TABLE `pedidoproducto` (
-  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `idpedido` int(11) NOT NULL,
-  `idproducto` int(11) NOT NULL,
-  `cantidad` int(11) NOT NULL
+CREATE TABLE `tienda` (
+  `idprenda` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `descripcion` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `tipo` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `talla` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `color` varchar(250) COLLATE utf8_unicode_ci not null,
+  `precio` int(11) NOT NULL,
+  `stock` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Volcado de datos para la tabla `pedidoproducto`
---
 
-INSERT INTO `pedidoproducto` (`idpedido`, `idproducto`, `cantidad`) VALUES
-(1, 2, 3);
---
--- Índices para tablas volcadas
---
 
 --
+-- Volcado de datos para la tabla `tienda`
+--
+INSERT INTO `tienda` (`descripcion`, `tipo`,`talla`,`color`,`precio`,`stock`) VALUES
+('Mom', 'Pantalon', 'S', 'Azul', 10, 5),
+('Chomba', 'Camiseta', 'M', 'Negra', 8, 6)
+
+
 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
