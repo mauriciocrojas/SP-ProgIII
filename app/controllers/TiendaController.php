@@ -39,6 +39,18 @@ class TiendaController extends Tienda
       $prenda->stock = $stock;
       $prenda->crearPrenda();
 
+      $archivosCargados = $request->getUploadedFiles();
+      $fotoPrenda = $archivosCargados['fotoprenda'];
+  
+      // Nuevo nombre archivo
+      $fechaYTipo = date("d-m-Y") . ".jpg";
+  
+      // Ruta a la que mandaremos el archivo
+      $rutaImagen = "../ImagenesRopa2024/" . $parametros['descripcion'] . $parametros['tipo']  . $fechaYTipo;
+  
+      // Guardo el archivo
+      $fotoPrenda->moveTo($rutaImagen);
+
       $payload = json_encode(array("mensaje" => "Prenda creada con exito"));
     }
 
@@ -48,31 +60,6 @@ class TiendaController extends Tienda
   }
 
 
-
-  public function CargarImagenMesa($request, $response, $args)
-  {
-    $idpedido = $args['idpedido'];
-    $archivosCargados = $request->getUploadedFiles();
-    $imagenMesa = $archivosCargados['imagenmesa'];
-
-    // Nuevo nombre archivo
-    $nuevoNombreImagen = date("d-m-Y") . ".jpg";
-
-    // Ruta a la que mandaremos el archivo
-    $rutaImagen = "../ImagenesMesas2024/" . "IdPedido" . $idpedido . "_" . $nuevoNombreImagen;
-
-    // Guardo el archivo
-    $imagenMesa->moveTo($rutaImagen);
-
-    // Guadamos la ubicación de la imagen en la base de datos
-    Tienda::GuardarImagenMesa($rutaImagen, $idpedido);
-
-    $payload = json_encode(array("mensaje" => "Imagen cargada con exito, guardada en el servidor, y su ubicacion en la base de datos"));
-
-    $response->getBody()->write($payload);
-    return $response
-      ->withHeader('Content-Type', 'application/json');
-  }
 
   public function TraerTodos($request, $response, $args)
   {

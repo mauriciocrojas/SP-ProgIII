@@ -42,15 +42,15 @@ class Tienda
     }
 
 
-    public static function GuardarImagenMesa($ubicacionImagen, $idpedido)
-    {
-        //Insert a la base
-        $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("UPDATE pedido SET ubicacionimagen = :ubicacionimagen WHERE idpedido = :idpedido");
-        $consulta->bindValue(':ubicacionimagen', $ubicacionImagen, PDO::PARAM_STR);
-        $consulta->bindValue(':idpedido', $idpedido, PDO::PARAM_INT);
-        $consulta->execute();
-    }
+    // public static function GuardarImagenMesa($ubicacionImagen, $idpedido)
+    // {
+    //     //Insert a la base
+    //     $objAccesoDatos = AccesoDatos::obtenerInstancia();
+    //     $consulta = $objAccesoDatos->prepararConsulta("UPDATE pedido SET ubicacionimagen = :ubicacionimagen WHERE idpedido = :idpedido");
+    //     $consulta->bindValue(':ubicacionimagen', $ubicacionImagen, PDO::PARAM_STR);
+    //     $consulta->bindValue(':idpedido', $idpedido, PDO::PARAM_INT);
+    //     $consulta->execute();
+    // }
 
     public static function obtenerTodos()
     {
