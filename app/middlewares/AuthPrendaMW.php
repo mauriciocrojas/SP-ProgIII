@@ -6,9 +6,6 @@ use Slim\Psr7\Response;
 
 class AuthPrendaMW extends Tienda
 {
-
-
-
   public function ValidarParamsPrenda(Request $request, RequestHandler $handler)
   {
     $params = $request->getParsedBody();

@@ -42,16 +42,6 @@ class Tienda
     }
 
 
-    // public static function GuardarImagenMesa($ubicacionImagen, $idpedido)
-    // {
-    //     //Insert a la base
-    //     $objAccesoDatos = AccesoDatos::obtenerInstancia();
-    //     $consulta = $objAccesoDatos->prepararConsulta("UPDATE pedido SET ubicacionimagen = :ubicacionimagen WHERE idpedido = :idpedido");
-    //     $consulta->bindValue(':ubicacionimagen', $ubicacionImagen, PDO::PARAM_STR);
-    //     $consulta->bindValue(':idpedido', $idpedido, PDO::PARAM_INT);
-    //     $consulta->execute();
-    // }
-
     public static function obtenerTodos()
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
@@ -62,18 +52,14 @@ class Tienda
         return $consulta->fetchAll(PDO::FETCH_CLASS, 'Tienda');
     }
 
-    public static function obtenerPedido($id)
+    public static function obtenerUno($idprenda)
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT pe.idpedido IdPedido, pe.idmesa Mesa, pe.nombrecliente Cliente, pe.estado EstadoPedido, 
-        pe.tiempoestimado TiempoDePreparacion, pr.descripcion Producto , pp.cantidad Cantidad FROM pedido pe 
-        inner join pedidoproducto pp on pe.idpedido = pp.idpedido
-        inner join producto pr on pp.idproducto = pr.idproducto
-        WHERE pp.idpedido = :idpedido");
-        $consulta->bindValue(':idpedido', $id, PDO::PARAM_STR);
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT idPrenda, descripcion, tipo, color, talla, precio, stock FROM tienda WHERE idprenda = :idprenda");
+        $consulta->bindValue(':idprenda', $idprenda, PDO::PARAM_INT);
         $consulta->execute();
 
-        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
+        return $consulta->fetchObject('Tienda');
     }
 
     public static function modificarPedido($id, $estado)

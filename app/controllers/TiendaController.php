@@ -20,7 +20,7 @@ class TiendaController extends Tienda
     $listaPrendas = Tienda::obtenerTodos();
 
     foreach ($listaPrendas as $prenda) {
-      if ($parametros['descripcion'] == $prenda->descripcion && $parametros['tipo'] == $prenda->tipo) {
+      if ($descripcion == $prenda->descripcion && $tipo == $prenda->tipo) {
         Tienda::ActualizarPrendaExistente($parametros['stock'], $parametros['precio'], $prenda->idPrenda);
         $payload = json_encode(array("mensaje" => "La prenda ya existía, por lo que se actualizó su valor y stock"));
         $existePrenda = true;
@@ -41,13 +41,13 @@ class TiendaController extends Tienda
 
       $archivosCargados = $request->getUploadedFiles();
       $fotoPrenda = $archivosCargados['fotoprenda'];
-  
-      // Nuevo nombre archivo
+
+      // Declaramos parte del nombre del archivo
       $fechaYTipo = date("d-m-Y") . ".jpg";
-  
+
       // Ruta a la que mandaremos el archivo
       $rutaImagen = "../ImagenesRopa2024/" . $parametros['descripcion'] . $parametros['tipo']  . $fechaYTipo;
-  
+
       // Guardo el archivo
       $fotoPrenda->moveTo($rutaImagen);
 
@@ -59,6 +59,49 @@ class TiendaController extends Tienda
       ->withHeader('Content-Type', 'application/json');
   }
 
+  public function ConsultarTipoPrenda($request, $response, $args)
+  {
+    $parametros = $request->getParsedBody();
+
+    $descripcion = $parametros['descripcion'];
+    $tipo = $parametros['tipo'];
+    $color = $parametros['color'];
+
+    $listaPrendas = Tienda::obtenerTodos();
+
+    $existePrendaExacta = false;
+    $existePrendaTipo = true;
+    $existePrendaDescripcion = true;
+
+    foreach ($listaPrendas as $prenda) {
+      if ($descripcion == $prenda->descripcion && $tipo == $prenda->tipo && $color == $prenda->color) {
+        $existePrendaExacta = true;
+        break;
+      }
+      if ($descripcion != $prenda->descripcion && $tipo == $prenda->tipo && $color == $prenda->color) {
+        $existePrendaDescripcion = false;
+      }
+      if ($descripcion == $prenda->descripcion && $tipo != $prenda->tipo && $color == $prenda->color) {
+        $existePrendaTipo = false;
+      }
+    }
+
+    if ($existePrendaExacta) {
+      $payload = json_encode(array("mensaje" => "Existen prendas con esa descripcion, tipo y color"));
+    } else {
+      if (!$existePrendaDescripcion) {
+        $payload = json_encode(array("mensaje" => "No hay prendas con descripcion: " . $descripcion));
+      } elseif (!$existePrendaTipo) {
+        $payload = json_encode(array("mensaje" => "No hay prendas de tipo: " . $tipo));
+      } else {
+        $payload = json_encode(array("mensaje" => "No hay prendas que coincidan con los criterios dados"));
+      }
+    }
+
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
 
 
   public function TraerTodos($request, $response, $args)
@@ -74,8 +117,8 @@ class TiendaController extends Tienda
   public function TraerUno($request, $response, $args)
   {
     // Buscamos pedido por su id
-    $idpedido = $args['idpedido'];
-    $pedido = Tienda::obtenerPedido($idpedido);
+    $idprenda = $args['idprenda'];
+    $pedido = Tienda::obtenerUno($idprenda);
     $payload = json_encode($pedido);
 
     $response->getBody()->write($payload);

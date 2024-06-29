@@ -41,9 +41,9 @@ $app->addBodyParsingMiddleware();
 // Routes Tienda
 $app->group('/tienda', function (RouteCollectorProxy $group) {
   $group->get('[/]', \TiendaController::class . ':TraerTodos');
-  // $group->get('/{idpedido}', \TiendaController::class . ':TraerUno');
+  $group->get('/{idprenda}', \TiendaController::class . ':TraerUno');
   $group->post('[/alta]', \TiendaController::class . ':CargarUno')->add(\AuthPrendaMW::class . ':ValidarParamsPrenda');
-  // $group->post('/alta', \TiendaController::class . ':CargarImagenMesa');
+  $group->post('/consultar', \TiendaController::class . ':ConsultarTipoPrenda');
   // $group->put('/modificarestado/{id}', \TiendaController::class . ':ModificarUno');
   //$group->delete('/eliminarpedido/{id}', \TiendaController::class . ':BorrarUno');
 });
