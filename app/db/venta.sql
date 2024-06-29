@@ -30,22 +30,23 @@ SET time_zone = "+00:00";
 CREATE TABLE `venta` (
   `idventa` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `email` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
-  `nombrecliente` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `descripcion` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
   `tipo` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
   `fechaventa` DATE NOT NULL,
-  `stock` int(11) NOT NULL,
-  `precio` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `stock` int(11) NOT NULL) 
+  ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
+ALTER TABLE venta
+add talla varchar(250) not null
 
 --
 -- Volcado de datos para la tabla `venta`
 --
 
-INSERT INTO `venta` (`email`, `nombrecliente`, `tipo`, `fechaventa`, `stock`, `precio`) VALUES
-('adiaz@gmail.com', 'Arnaldo', 'Camiseta', '2024-06-27', 1, 10),
-('bcruz@gmail.com', 'Barbara', 'Pantalon', '2024-06-26', 2, 9);
+INSERT INTO `venta` (`email`, `descripcion`, `tipo`, `fechaventa`, `stock`) VALUES
+('adiaz@gmail.com', 'Chomba', 'Camiseta', '2024-06-27', 1),
+('bcruz@gmail.com', 'Mom', 'Pantalon', '2024-06-26', 2);
 
 
 --

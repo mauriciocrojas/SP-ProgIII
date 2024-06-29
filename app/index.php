@@ -51,13 +51,14 @@ $app->group('/tienda', function (RouteCollectorProxy $group) {
 
 
 // Routes Venta
-// $app->group('/productos', function (RouteCollectorProxy $group) {
-//   $group->get('[/]', \ProductoController::class . ':TraerTodos');
-//   $group->get('/{descripcionProducto}', \ProductoController::class . ':TraerUno');
-//   $group->post('[/]', \ProductoController::class . ':CargarUno');
-//   $group->put('/modificarestado/{id}', \ProductoController::class . ':ModificarUno');
-//   $group->delete('/eliminarproducto/{id}', \ProductoController::class . ':BorrarUno');
-// });
+$app->group('/ventas', function (RouteCollectorProxy $group) {
+  $group->post('[/alta]', \VentaController::class . ':CargarUno');
+
+  $group->get('[/]', \VentaController::class . ':TraerTodos');
+  $group->get('/{descripcionProducto}', \VentaController::class . ':TraerUno');
+  $group->put('/modificarestado/{id}', \VentaController::class . ':ModificarUno');
+  $group->delete('/eliminarproducto/{id}', \VentaController::class . ':BorrarUno');
+});
 
 
 

@@ -41,6 +41,16 @@ class Tienda
         $consulta->execute();
     }
 
+    public static function DescontarStock($stock, $idprenda)
+    {
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta("UPDATE tienda SET stock = stock - :stock WHERE idprenda = :idprenda");
+
+        $consulta->bindValue(':stock', $stock, PDO::PARAM_INT);
+        $consulta->bindValue(':idprenda', $idprenda, PDO::PARAM_INT);
+
+        $consulta->execute();
+    }
 
     public static function obtenerTodos()
     {

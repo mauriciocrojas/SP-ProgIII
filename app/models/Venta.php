@@ -4,22 +4,24 @@ class Venta
 {
     public $idVenta;
     public $email;
-    public $nombre;
+    public $descripcion;
     public $tipo;
-    public $numeroVenta;
     public $stock;
-    public $fecha;
+    public $fechaVenta;
     public $talla;
 
 
     public function crearVenta()
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO producto (descripcion, tipo, tiempopreparacion, precio) VALUES (:descripcion, :tipo, :tiempopreparacion, :precio)");
+        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO venta (email, descripcion, tipo, talla, stock, fechaventa) VALUES (:email, :descripcion, :tipo, :talla, :stock, :fecha)");
+        $consulta->bindValue(':email', $this->email, PDO::PARAM_STR);
         $consulta->bindValue(':descripcion', $this->descripcion, PDO::PARAM_STR);
         $consulta->bindValue(':tipo', $this->tipo, PDO::PARAM_STR);
-        $consulta->bindValue(':tiempopreparacion', $this->tiempopreparacion, PDO::PARAM_INT);
-        $consulta->bindValue(':precio', $this->precio, PDO::PARAM_INT);
+        $consulta->bindValue(':talla', $this->talla, PDO::PARAM_STR);
+        $consulta->bindValue(':stock', $this->stock, PDO::PARAM_INT);
+        $consulta->bindValue(':fecha', date('Y-m-d'), PDO::PARAM_STR);
+
         $consulta->execute();
 
         return $objAccesoDatos->obtenerUltimoId();
