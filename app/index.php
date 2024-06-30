@@ -54,6 +54,7 @@ $app->group('/ventas', function (RouteCollectorProxy $group) {
 // Routes VentasConsultar
 $app->group('/ventas/consultar', function (RouteCollectorProxy $group) {
   $group->get('/productos/vendidos/', \VentaController::class . ':TraerPorFecha');
+  $group->get('/ventas/porusuario', \VentaController::class . ':TraerPorUsuario');
 });
 
 

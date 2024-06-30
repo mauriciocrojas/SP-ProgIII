@@ -131,10 +131,27 @@ class VentaController extends Venta
 
     if (isset($parametros['fechaVenta'])) {
       $lista = Venta::obtenerPorFecha($parametros['fechaVenta']);
-      $payload = json_encode(array("listaPrendas" => $lista));
+      $payload = json_encode(array("listaVentas" => $lista));
     } else {
       $lista = Venta::obtenerPorFecha();
-      $payload = json_encode(array("listaPrendas" => $lista));
+      $payload = json_encode(array("listaVentas" => $lista));
+    }
+
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
+
+  public function TraerPorUsuario($request, $response, $args)
+  {
+    $parametros = $request->getQueryParams();
+
+    if (isset($parametros['email'])) {
+      $lista = Venta::obtenerPorUsuario($parametros['email']);
+      $payload = json_encode(array("listaVentas" => $lista));
+    } else {
+      $lista = Venta::obtenerPorFecha();
+      $payload = json_encode(array("listaVentas" => $lista));
     }
 
     $response->getBody()->write($payload);

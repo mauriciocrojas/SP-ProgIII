@@ -59,4 +59,14 @@ class Venta
 
         return $consulta->fetchAll(PDO::FETCH_CLASS, 'Tienda');
     }
+
+    public static function obtenerPorUsuario($usuario)
+    {
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT idVenta, nroPedido, email, descripcion, tipo, talla, stock, fechaVenta FROM venta WHERE email = :email");
+        $consulta->bindValue(':email', $usuario, PDO::PARAM_STR);
+        $consulta->execute();
+
+        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Tienda');
+    }
 }
