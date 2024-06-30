@@ -14,6 +14,7 @@ class VentaController extends Venta
     $talla = $parametros['talla'];
     $stock = $parametros['stock'];
     $email = $parametros['email'];
+    $nroPedido = $parametros['nropedido'];
 
     $listaPrendas = Tienda::obtenerTodos();
 
@@ -29,6 +30,7 @@ class VentaController extends Venta
         $venta->talla = $talla;
         $venta->stock = $stock;
         $venta->email = $email;
+        $venta->nroPedido = $nroPedido;
         $venta->crearVenta();
 
         $payload = json_encode(array("mensaje" => "Venta realizada con exito"));
@@ -41,14 +43,14 @@ class VentaController extends Venta
         $fotoPrenda = $archivosCargados['fotoprenda'];
 
         //Recorto el email hasta el @
-        $nombreUsuario = explode('@', $email)[0];  
+        $nombreUsuario = explode('@', $email)[0];
 
         // Declaro parte del nombre final del archivo
         $fechaYTipo = date("d-m-Y") . ".jpg";
-  
+
         // Ruta a la que mandaremos el archivo
-        $rutaImagen = "../ImagenesVentas2024/" . $descripcion . $tipo . $talla . $nombreUsuario. $fechaYTipo;
-  
+        $rutaImagen = "../ImagenesVentas2024/" . $descripcion . $tipo . $talla . $nombreUsuario . $fechaYTipo;
+
         // Guardo el archivo
         $fotoPrenda->moveTo($rutaImagen);
 
@@ -73,46 +75,49 @@ class VentaController extends Venta
   public function TraerTodos($request, $response, $args)
   {
     $lista = Venta::obtenerTodos();
-    $payload = json_encode(array("listaProductos" => $lista));
+    $payload = json_encode(array("listaVentas" => $lista));
 
     $response->getBody()->write($payload);
     return $response
       ->withHeader('Content-Type', 'application/json');
   }
 
-  public function TraerUno($request, $response, $args)
-  {
-    // Buscamos producto por su descripcion
-    $descripcionProducto = $args['descripcionProducto'];
-    $producto = Venta::obtenerProducto($descripcionProducto);
-    $payload = json_encode($producto);
-
-    $response->getBody()->write($payload);
-    return $response
-      ->withHeader('Content-Type', 'application/json');
-  }
 
   public function ModificarUno($request, $response, $args)
   {
     $parametros = $request->getParsedBody();
+    $nroPedido = $args['nropedido'];
 
-    $id = $args['id'];
-    $estado = $parametros['estado'];
-    Venta::modificarProducto($id, $estado);
+    $existeVenta = false;
 
-    $payload = json_encode(array("mensaje" => "Estado del producto modificado con exito"));
+    $tallaNueva = $parametros['tallanueva'];
+    $talla = $parametros['talla'];
+    $descripcion = $parametros['descripcion'];
+    $tipo = $parametros['tipo'];
+    $stock = $parametros['stock'];
 
-    $response->getBody()->write($payload);
-    return $response
-      ->withHeader('Content-Type', 'application/json');
-  }
+    $listaVentas = Venta::obtenerTodos();
 
-  public function BorrarUno($request, $response, $args)
-  {
-    $id = $args['id'];
-    Venta::borrarProducto($id);
+    foreach ($listaVentas as $venta) {
+      if (
+        $venta->talla == $talla && $venta->descripcion == $descripcion
+        && $venta->tipo == $tipo && $venta->stock == $stock && $nroPedido == $venta->nroPedido
+      ) {
 
-    $payload = json_encode(array("mensaje" => "Producto borrado con exito"));
+        $existeVenta = true;
+        break;
+      } else {
+        $existeVenta = false;
+      }
+    }
+
+    if ($existeVenta) {
+      Venta::modificarPedido($nroPedido, $tallaNueva);
+      $payload = json_encode(array("mensaje" => "Talla del pedido modificada con exito"));
+    } else {
+      $payload = json_encode(array("mensaje" => "No existe el numero de pedido: " . $nroPedido . " que coincida con los datos suministrados"));
+    }
+
 
     $response->getBody()->write($payload);
     return $response

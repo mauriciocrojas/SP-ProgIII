@@ -71,22 +71,4 @@ class Tienda
 
         return $consulta->fetchObject('Tienda');
     }
-
-    public static function modificarPedido($id, $estado)
-    {
-        $objAccesoDato = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDato->prepararConsulta("UPDATE pedido SET estado = :estado WHERE idpedido = :idpedido");
-        $consulta->bindValue(':estado', $estado, PDO::PARAM_STR);
-        $consulta->bindValue(':idpedido', $id, PDO::PARAM_INT);
-        $consulta->execute();
-    }
-
-    public static function borrarPedido($id)
-    {
-        $objAccesoDato = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDato->prepararConsulta("UPDATE pedido SET estado = 'Baja' WHERE idpedido = :idpedido");
-
-        $consulta->bindValue(':idpedido', $id, PDO::PARAM_INT);
-        $consulta->execute();
-    }
 }

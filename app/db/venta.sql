@@ -39,7 +39,7 @@ CREATE TABLE `venta` (
 
 ALTER TABLE venta
 add talla varchar(250) not null
-
+add nropedido int not null
 --
 -- Volcado de datos para la tabla `venta`
 --

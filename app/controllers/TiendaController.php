@@ -125,31 +125,4 @@ class TiendaController extends Tienda
     return $response
       ->withHeader('Content-Type', 'application/json');
   }
-
-  public function ModificarUno($request, $response, $args)
-  {
-    $parametros = $request->getParsedBody();
-
-    $id = $args['id'];
-    $estado = $parametros['estado'];
-    Tienda::modificarPedido($id, $estado);
-
-    $payload = json_encode(array("mensaje" => "Estado del pedido modificado con exito"));
-
-    $response->getBody()->write($payload);
-    return $response
-      ->withHeader('Content-Type', 'application/json');
-  }
-
-  public function BorrarUno($request, $response, $args)
-  {
-    $id = $args['id'];
-    Tienda::borrarPedido($id);
-
-    $payload = json_encode(array("mensaje" => "Pedido borrado con exito"));
-
-    $response->getBody()->write($payload);
-    return $response
-      ->withHeader('Content-Type', 'application/json');
-  }
 }
