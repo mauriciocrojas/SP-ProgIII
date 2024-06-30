@@ -123,4 +123,22 @@ class VentaController extends Venta
     return $response
       ->withHeader('Content-Type', 'application/json');
   }
+
+  //Ventas consultar
+  public function TraerPorFecha($request, $response, $args)
+  {
+    $parametros = $request->getQueryParams();
+
+    if (isset($parametros['fechaVenta'])) {
+      $lista = Venta::obtenerPorFecha($parametros['fechaVenta']);
+      $payload = json_encode(array("listaPrendas" => $lista));
+    } else {
+      $lista = Venta::obtenerPorFecha();
+      $payload = json_encode(array("listaPrendas" => $lista));
+    }
+
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
 }

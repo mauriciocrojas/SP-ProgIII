@@ -51,6 +51,10 @@ $app->group('/ventas', function (RouteCollectorProxy $group) {
   $group->put('/modificartalla/{nropedido}', \VentaController::class . ':ModificarUno');
 });
 
+// Routes VentasConsultar
+$app->group('/ventas/consultar', function (RouteCollectorProxy $group) {
+  $group->get('/productos/vendidos/', \VentaController::class . ':TraerPorFecha');
+});
 
 
 $app->get('[/]', function (Request $request, Response $response) {

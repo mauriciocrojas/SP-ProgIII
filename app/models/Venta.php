@@ -48,4 +48,15 @@ class Venta
         $consulta->bindValue(':nropedido', $nroPedido, PDO::PARAM_INT);
         $consulta->execute();
     }
+
+    //Ventas consultar: Traer ventas por fecha
+    public static function obtenerPorFecha($fecha = "2024-06-27")
+    {
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT idVenta, nroPedido, email, descripcion, tipo, talla, stock, fechaVenta FROM venta WHERE fechaventa = :fechaventa");
+        $consulta->bindValue(':fechaventa', $fecha, PDO::PARAM_STR);
+        $consulta->execute();
+
+        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Tienda');
+    }
 }
