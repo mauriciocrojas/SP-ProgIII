@@ -150,8 +150,39 @@ class VentaController extends Venta
       $lista = Venta::obtenerPorUsuario($parametros['email']);
       $payload = json_encode(array("listaVentas" => $lista));
     } else {
-      $lista = Venta::obtenerPorFecha();
+      $payload = json_encode(array("mensaje" => "El usuario no fue seteado"));
+    }
+
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
+
+  public function TraerPorTipo($request, $response, $args)
+  {
+    $parametros = $request->getQueryParams();
+
+    if (isset($parametros['tipo'])) {
+      $lista = Venta::obtenerPorTipo($parametros['tipo']);
       $payload = json_encode(array("listaVentas" => $lista));
+    } else {
+      $payload = json_encode(array("mensaje" => "El tipo de producto no fue seteado"));
+    }
+
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
+  
+  public function TraerPorRangoDePrecios($request, $response, $args)
+  {
+    $parametros = $request->getQueryParams();
+
+    if (isset($parametros['valorA'],$parametros['valorB'])) {
+      $lista = Venta::obtenerProductosPorPrecio($parametros['valorA'],$parametros['valorB']);
+      $payload = json_encode(array("listaProductos" => $lista));
+    } else {
+      $payload = json_encode(array("mensaje" => "El rango de precios no fue seteado correctamente"));
     }
 
     $response->getBody()->write($payload);

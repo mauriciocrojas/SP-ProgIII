@@ -57,7 +57,7 @@ class Venta
         $consulta->bindValue(':fechaventa', $fecha, PDO::PARAM_STR);
         $consulta->execute();
 
-        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Tienda');
+        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Venta');
     }
 
     public static function obtenerPorUsuario($usuario)
@@ -65,6 +65,27 @@ class Venta
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
         $consulta = $objAccesoDatos->prepararConsulta("SELECT idVenta, nroPedido, email, descripcion, tipo, talla, stock, fechaVenta FROM venta WHERE email = :email");
         $consulta->bindValue(':email', $usuario, PDO::PARAM_STR);
+        $consulta->execute();
+
+        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Venta');
+    }
+
+    public static function obtenerPorTipo($tipo)
+    {
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT idVenta, nroPedido, email, descripcion, tipo, talla, stock, fechaVenta FROM venta WHERE tipo = :tipo");
+        $consulta->bindValue(':tipo', $tipo, PDO::PARAM_STR);
+        $consulta->execute();
+
+        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Venta');
+    }
+
+    public static function obtenerProductosPorPrecio($valorA, $valorB)
+    {
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT idPrenda, descripcion, tipo, color, talla, precio, stock FROM tienda WHERE precio >= :valorA AND precio <= :valorB");
+        $consulta->bindValue(':valorA', $valorA, PDO::PARAM_INT);
+        $consulta->bindValue(':valorB', $valorB, PDO::PARAM_INT);
         $consulta->execute();
 
         return $consulta->fetchAll(PDO::FETCH_CLASS, 'Tienda');
