@@ -17,7 +17,9 @@ require_once './db/AccesoDatos.php';
 
 require_once './controllers/TiendaController.php';
 require_once './controllers/VentaController.php';
+require_once './controllers/UsuarioController.php';
 require_once './middlewares/AuthPrendaMW.php';
+require_once './models/Login.php';
 
 // Load ENV
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
@@ -59,6 +61,24 @@ $app->group('/ventas/consultar', function (RouteCollectorProxy $group) {
   $group->get('/productos/entrevalores', \VentaController::class . ':TraerPorRangoDePrecios');
   $group->get('/ventas/ingresos', \VentaController::class . ':TraerIngresosPorDia');
   $group->get('/productos/masvendido', \VentaController::class . ':TraerPrendaMasVendida');
+});
+
+
+// Routes Log
+$app->group('/log', function (RouteCollectorProxy $group) {
+  $group->post('[/]', \Login::class . ':ProcesoIngreso');
+});
+
+
+// Routes Usuario
+$app->group('/registro', function (RouteCollectorProxy $group) {
+  $group->post('[/alta]', \UsuarioController::class . ':CargarUno');
+  $group->get('/listarusuarios', \UsuarioController::class . ':TraerTodos');
+});
+
+// Routes VentasDescargar
+$app->group('/ventas', function (RouteCollectorProxy $group) {
+  $group->get('/descargar', \VentaController::class . ':descargarCSV');;
 });
 
 

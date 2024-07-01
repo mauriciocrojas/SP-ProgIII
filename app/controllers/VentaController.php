@@ -224,4 +224,49 @@ class VentaController extends Venta
     $response->getBody()->write($payload);
     return $response->withHeader('Content-Type', 'application/json');
   }
+
+
+  //
+  public function descargarCSV($request, $response, $args)
+  {
+    $listaVentas = Venta::obtenerTodos();
+
+    $nombreCSV = 'ventas_' . date('Y-m-d') . '.csv';
+
+    $file = fopen('php://memory', 'w');
+
+    $headers = ['idVenta', 'idPrenda', 'nroPedido', 'email', 'descripcion', 'tipo', 'talla', 'stock', 'fechaVenta'];
+    fputcsv($file, $headers);
+
+    foreach ($listaVentas as $venta) {
+      fputcsv($file, [
+        $venta->idVenta,
+        $venta->idPrenda,
+        $venta->nroPedido,
+        $venta->email,
+        $venta->descripcion,
+        $venta->tipo,
+        $venta->talla,
+        $venta->stock,
+        $venta->fechaVenta
+      ]);
+    }
+
+    fseek($file, 0);
+
+    $response = $response->withHeader('Content-Description', 'File Transfer')
+      ->withHeader('Content-Type', 'application/csv')
+      ->withHeader('Content-Disposition', 'attachment; filename="' . $nombreCSV . '"')
+      ->withHeader('Expires', '0')
+      ->withHeader('Cache-Control', 'must-revalidate')
+      ->withHeader('Pragma', 'public');
+
+    while (!feof($file)) {
+      $response->getBody()->write(fread($file, 8192));
+    }
+
+    fclose($file);
+
+    return $response;
+  }
 }
