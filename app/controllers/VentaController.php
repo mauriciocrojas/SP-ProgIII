@@ -254,15 +254,11 @@ class VentaController extends Venta
 
     fseek($file, 0);
 
-    $response = $response->withHeader('Content-Description', 'File Transfer')
-      ->withHeader('Content-Type', 'application/csv')
-      ->withHeader('Content-Disposition', 'attachment; filename="' . $nombreCSV . '"')
-      ->withHeader('Expires', '0')
-      ->withHeader('Cache-Control', 'must-revalidate')
-      ->withHeader('Pragma', 'public');
+    $response = $response->withHeader('Content-Type', 'application/csv')
+      ->withHeader('Content-Disposition', 'attachment; filename="' . $nombreCSV . '"');
 
     while (!feof($file)) {
-      $response->getBody()->write(fread($file, 8192));
+      $response->getBody()->write(fread($file, 9999));
     }
 
     fclose($file);
