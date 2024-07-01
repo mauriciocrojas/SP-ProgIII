@@ -93,7 +93,7 @@ class Venta
         return $consulta->fetchAll(PDO::FETCH_CLASS, 'Tienda');
     }
 
-    public static function obtenerIngresosPorDia($flag, $fecha = null) 
+    public static function obtenerIngresosPorDia($flag, $fecha = null)
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
 
@@ -106,5 +106,17 @@ class Venta
         $consulta->execute();
 
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    public static function obtenerProductoMasVendido()
+    {
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT idPrenda, descripcion, tipo, color, talla, precio, stock FROM tienda WHERE idprenda =
+        (SELECT v.idprenda FROM venta v INNER JOIN tienda t ON v.idprenda = t.idprenda GROUP BY v.idprenda ORDER BY COUNT(v.idprenda) DESC LIMIT 1)");
+
+        $consulta->execute();
+
+        return $consulta->fetch(PDO::FETCH_ASSOC);
     }
 }

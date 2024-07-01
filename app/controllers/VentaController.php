@@ -215,4 +215,13 @@ class VentaController extends Venta
     return $response
       ->withHeader('Content-Type', 'application/json');
   }
+
+  public function TraerPrendaMasVendida($request, $response, $args)
+  {
+    $prendaMasVendida = Venta::obtenerProductoMasVendido();
+    $payload = json_encode(array("Prenda mas vendida" => $prendaMasVendida));
+
+    $response->getBody()->write($payload);
+    return $response->withHeader('Content-Type', 'application/json');
+  }
 }
