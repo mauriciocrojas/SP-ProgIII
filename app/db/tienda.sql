@@ -43,9 +43,9 @@ ADD eliminado BOOL NOT NULL DEFAULT 0;
 --
 -- Volcado de datos para la tabla `tienda`
 --
-INSERT INTO `tienda` (`descripcion`, `tipo`,`talla`,`color`,`precio`,`stock`) VALUES
-('Mom', 'Pantalon', 'S', 'Azul', 10, 5),
-('Chomba', 'Camiseta', 'M', 'Negra', 8, 6)
+INSERT INTO `tienda` (`descripcion`, `tipo`,`talla`,`color`,`precio`,`stock`, `eliminado`) VALUES
+('Mom', 'Pantalon', 'S', 'Azul', 10, 15, 0),
+('Chomba', 'Camiseta', 'M', 'Negra', 8, 26, 0);
 
 
 

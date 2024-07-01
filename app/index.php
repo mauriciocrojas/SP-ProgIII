@@ -57,6 +57,7 @@ $app->group('/ventas/consultar', function (RouteCollectorProxy $group) {
   $group->get('/ventas/porusuario', \VentaController::class . ':TraerPorUsuario');
   $group->get('/ventas/porproducto', \VentaController::class . ':TraerPorTipo');
   $group->get('/productos/entrevalores', \VentaController::class . ':TraerPorRangoDePrecios');
+  $group->get('/ventas/ingresos', \VentaController::class . ':TraerIngresosPorDia');
 });
 
 

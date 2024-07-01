@@ -31,6 +31,8 @@ class VentaController extends Venta
         $venta->stock = $stock;
         $venta->email = $email;
         $venta->nroPedido = $nroPedido;
+        $venta->idPrenda = $prenda->idPrenda;
+
         $venta->crearVenta();
 
         $payload = json_encode(array("mensaje" => "Venta realizada con exito"));
@@ -173,16 +175,35 @@ class VentaController extends Venta
     return $response
       ->withHeader('Content-Type', 'application/json');
   }
-  
+
   public function TraerPorRangoDePrecios($request, $response, $args)
   {
     $parametros = $request->getQueryParams();
 
-    if (isset($parametros['valorA'],$parametros['valorB'])) {
-      $lista = Venta::obtenerProductosPorPrecio($parametros['valorA'],$parametros['valorB']);
+    if (isset($parametros['valorA'], $parametros['valorB'])) {
+      $lista = Venta::obtenerProductosPorPrecio($parametros['valorA'], $parametros['valorB']);
       $payload = json_encode(array("listaProductos" => $lista));
     } else {
       $payload = json_encode(array("mensaje" => "El rango de precios no fue seteado correctamente"));
+    }
+
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
+
+  public function TraerIngresosPorDia($request, $response, $args)
+  {
+    $parametros = $request->getQueryParams();
+
+    if (isset($parametros['fechaVenta'])) {
+      $totalVentas = Venta::obtenerIngresosPorDia(true, $parametros['fechaVenta']);
+      $mensaje = "Los ingresos por ventas del día " . $parametros['fechaVenta'] . " fueron de: $" . $totalVentas;
+      $payload = json_encode(array("mensaje" => $mensaje));
+    } else {
+      $totalVentas = Venta::obtenerIngresosPorDia(false);
+      $mensaje = "Los ingresos por ventas del día 2024-06-27 fueron de: $" . $totalVentas;
+      $payload = json_encode(array("mensaje" => $mensaje));
     }
 
     $response->getBody()->write($payload);

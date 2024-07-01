@@ -3,6 +3,7 @@
 class Venta
 {
     public $idVenta;
+    public $idPrenda;
     public $email;
     public $descripcion;
     public $tipo;
@@ -15,13 +16,14 @@ class Venta
     public function crearVenta()
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO venta (nropedido, email, descripcion, tipo, talla, stock, fechaventa) VALUES (:nropedido, :email, :descripcion, :tipo, :talla, :stock, :fecha)");
+        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO venta (idprenda, nropedido, email, descripcion, tipo, talla, stock, fechaventa) VALUES (:idprenda, :nropedido, :email, :descripcion, :tipo, :talla, :stock, :fecha)");
         $consulta->bindValue(':email', $this->email, PDO::PARAM_STR);
         $consulta->bindValue(':descripcion', $this->descripcion, PDO::PARAM_STR);
         $consulta->bindValue(':tipo', $this->tipo, PDO::PARAM_STR);
         $consulta->bindValue(':talla', $this->talla, PDO::PARAM_STR);
         $consulta->bindValue(':stock', $this->stock, PDO::PARAM_INT);
         $consulta->bindValue(':nropedido', $this->nroPedido, PDO::PARAM_INT);
+        $consulta->bindValue(':idprenda', $this->idPrenda, PDO::PARAM_INT);
         $consulta->bindValue(':fecha', date('Y-m-d'), PDO::PARAM_STR);
 
         $consulta->execute();
@@ -33,7 +35,7 @@ class Venta
     public static function obtenerTodos()
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT idVenta, nroPedido, email, descripcion, tipo, talla, stock, fechaVenta FROM venta");
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT idVenta, idPrenda, nroPedido, email, descripcion, tipo, talla, stock, fechaVenta FROM venta");
         $consulta->execute();
 
         return $consulta->fetchAll(PDO::FETCH_CLASS, 'Venta');
@@ -53,7 +55,7 @@ class Venta
     public static function obtenerPorFecha($fecha = "2024-06-27")
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT idVenta, nroPedido, email, descripcion, tipo, talla, stock, fechaVenta FROM venta WHERE fechaventa = :fechaventa");
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT idVenta, idPrenda, nroPedido, email, descripcion, tipo, talla, stock, fechaVenta FROM venta WHERE fechaventa = :fechaventa");
         $consulta->bindValue(':fechaventa', $fecha, PDO::PARAM_STR);
         $consulta->execute();
 
@@ -63,7 +65,7 @@ class Venta
     public static function obtenerPorUsuario($usuario)
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT idVenta, nroPedido, email, descripcion, tipo, talla, stock, fechaVenta FROM venta WHERE email = :email");
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT idVenta, idPrenda, nroPedido, email, descripcion, tipo, talla, stock, fechaVenta FROM venta WHERE email = :email");
         $consulta->bindValue(':email', $usuario, PDO::PARAM_STR);
         $consulta->execute();
 
@@ -73,7 +75,7 @@ class Venta
     public static function obtenerPorTipo($tipo)
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT idVenta, nroPedido, email, descripcion, tipo, talla, stock, fechaVenta FROM venta WHERE tipo = :tipo");
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT idVenta, idPrenda, nroPedido, email, descripcion, tipo, talla, stock, fechaVenta FROM venta WHERE tipo = :tipo");
         $consulta->bindValue(':tipo', $tipo, PDO::PARAM_STR);
         $consulta->execute();
 
@@ -89,5 +91,21 @@ class Venta
         $consulta->execute();
 
         return $consulta->fetchAll(PDO::FETCH_CLASS, 'Tienda');
+    }
+
+    public static function obtenerIngresosPorDia($flag, $fecha = "2024-06-27")
+    {
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+
+        if ($flag) {
+            $consulta = $objAccesoDatos->prepararConsulta("SELECT sum(t.precio) AS total_ventas FROM venta v INNER JOIN tienda t ON v.idprenda = t.idprenda WHERE v.fechaventa = :fecha");
+            $consulta->bindValue(':fecha', $fecha, PDO::PARAM_STR);
+        } else {
+            $consulta = $objAccesoDatos->prepararConsulta("SELECT sum(t.precio) AS total_ventas, v.fechaventa FROM venta v INNER JOIN tienda t ON v.idprenda = t.idprenda GROUP BY v.fechaventa");
+            $consulta->bindValue(':fecha', $fecha, PDO::PARAM_STR);
+        }
+        $consulta->execute();
+
+        return $consulta->fetch(PDO::FETCH_ASSOC)['total_ventas'];
     }
 }

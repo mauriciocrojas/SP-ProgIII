@@ -40,14 +40,14 @@ CREATE TABLE `venta` (
 ALTER TABLE venta
 add talla varchar(250) not null
 add nropedido int not null
+add idprenda int not null
 --
 -- Volcado de datos para la tabla `venta`
 --
 
-INSERT INTO `venta` (`email`, `descripcion`, `tipo`, `fechaventa`, `stock`) VALUES
-('adiaz@gmail.com', 'Chomba', 'Camiseta', '2024-06-27', 1),
-('bcruz@gmail.com', 'Mom', 'Pantalon', '2024-06-26', 2);
-
+INSERT INTO `venta` (`email`, `descripcion`, `tipo`, `fechaventa`, `stock`, `talla`, `nropedido`, `idprenda` ) VALUES
+('adiaz@gmail.com', 'Chomba', 'Camiseta', '2024-06-27', 1, 'S', 123, 1),
+('bcruz@gmail.com', 'Mom', 'Pantalon', '2024-06-26', 2, 'M', 121, 2);
 
 --
 
