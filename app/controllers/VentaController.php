@@ -198,11 +198,16 @@ class VentaController extends Venta
 
     if (isset($parametros['fechaVenta'])) {
       $totalVentas = Venta::obtenerIngresosPorDia(true, $parametros['fechaVenta']);
-      $mensaje = "Los ingresos por ventas del día " . $parametros['fechaVenta'] . " fueron de: $" . $totalVentas;
+      $mensaje = "Los ingresos por ventas del día " . $parametros['fechaVenta'] . " fueron de: $" . $totalVentas[0]['total_ventas'];
       $payload = json_encode(array("mensaje" => $mensaje));
     } else {
-      $totalVentas = Venta::obtenerIngresosPorDia(false);
-      $mensaje = "Los ingresos por ventas del día 2024-06-27 fueron de: $" . $totalVentas;
+      $ventasPorDia = Venta::obtenerIngresosPorDia(false);
+      $mensaje = "Los ingresos por ventas de cada día fueron de: / ";
+
+      foreach ($ventasPorDia as $venta) {
+        $mensaje  .=  $venta['fecha_venta'] . ":$" .  $venta['total_ventas'] . " / ";
+      }
+
       $payload = json_encode(array("mensaje" => $mensaje));
     }
 

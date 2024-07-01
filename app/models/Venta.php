@@ -93,7 +93,7 @@ class Venta
         return $consulta->fetchAll(PDO::FETCH_CLASS, 'Tienda');
     }
 
-    public static function obtenerIngresosPorDia($flag, $fecha = "2024-06-27")
+    public static function obtenerIngresosPorDia($flag, $fecha = null) 
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
 
@@ -101,11 +101,10 @@ class Venta
             $consulta = $objAccesoDatos->prepararConsulta("SELECT sum(t.precio) AS total_ventas FROM venta v INNER JOIN tienda t ON v.idprenda = t.idprenda WHERE v.fechaventa = :fecha");
             $consulta->bindValue(':fecha', $fecha, PDO::PARAM_STR);
         } else {
-            $consulta = $objAccesoDatos->prepararConsulta("SELECT sum(t.precio) AS total_ventas, v.fechaventa FROM venta v INNER JOIN tienda t ON v.idprenda = t.idprenda GROUP BY v.fechaventa");
-            $consulta->bindValue(':fecha', $fecha, PDO::PARAM_STR);
+            $consulta = $objAccesoDatos->prepararConsulta("SELECT sum(t.precio) AS total_ventas, v.fechaventa AS fecha_venta FROM venta v INNER JOIN tienda t ON v.idprenda = t.idprenda GROUP BY v.fechaventa");
         }
         $consulta->execute();
 
-        return $consulta->fetch(PDO::FETCH_ASSOC)['total_ventas'];
+        return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
 }
